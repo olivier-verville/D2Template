@@ -30,28 +30,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static const DWORD DLLBASE_BNCLIENT		=	(DWORD)LoadLibraryA("Bnclient.dll");
-static const DWORD DLLBASE_D2CLIENT		=	(DWORD)LoadLibraryA("D2Client.dll");
-static const DWORD DLLBASE_D2CMP		=	(DWORD)LoadLibraryA("D2CMP.dll");
-static const DWORD DLLBASE_D2COMMON		=	(DWORD)LoadLibraryA("D2Common.dll");
-static const DWORD DLLBASE_D2DDRAW		=	(DWORD)LoadLibraryA("D2DDraw.dll");
-static const DWORD DLLBASE_D2DIRECT3D	=	(DWORD)LoadLibraryA("D2Direct3D.dll");
-static const DWORD DLLBASE_D2GAME		=	(DWORD)LoadLibraryA("D2Game.dll");
-static const DWORD DLLBASE_D2GDI		=	(DWORD)LoadLibraryA("D2Gdi.dll");
-static const DWORD DLLBASE_D2GFX		=	(DWORD)LoadLibraryA("D2Gfx.dll");
-static const DWORD DLLBASE_D2GLIDE		=	(DWORD)LoadLibraryA("D2Glide.dll");
-static const DWORD DLLBASE_D2LANG		=	(DWORD)LoadLibraryA("D2Lang.dll");
-static const DWORD DLLBASE_D2LAUNCH		=	(DWORD)LoadLibraryA("D2Launch.dll");
-static const DWORD DLLBASE_D2MCPCLIENT	=	(DWORD)LoadLibraryA("D2MCPClient.dll");
-static const DWORD DLLBASE_D2MULTI		=	(DWORD)LoadLibraryA("D2Multi.dll");
-static const DWORD DLLBASE_D2NET		=	(DWORD)LoadLibraryA("D2Net.dll");
-static const DWORD DLLBASE_D2SOUND		=	(DWORD)LoadLibraryA("D2Sound.dll");
-static const DWORD DLLBASE_D2WIN		=	(DWORD)LoadLibraryA("D2Win.dll");
-static const DWORD DLLBASE_FOG			=	(DWORD)LoadLibraryA("Fog.dll");
-static const DWORD DLLBASE_STORM		=	(DWORD)LoadLibraryA("Storm.dll");
-static const DWORD DLLBASE_IJL11		=	(DWORD)LoadLibraryA("ijl11.dll");
-static const DWORD DLLBASE_BINKW32		=	(DWORD)LoadLibraryA("binkw32.dll");
-static const DWORD DLLBASE_SMACKW32		=	(DWORD)LoadLibraryA("SmackW32.dll");
+
+#ifdef _MSC_VER // eliminate duplicates in msvc - enable /OPT:ICF linker option
+
+__declspec(selectany) extern const DWORD BNCLIENT          =  (DWORD)LoadLibraryA("Bnclient.dll");
+__declspec(selectany) extern const DWORD D2CLIENT          =  (DWORD)LoadLibraryA("D2Client.dll");
+__declspec(selectany) extern const DWORD D2CMP             =  (DWORD)LoadLibraryA("D2CMP.dll");
+__declspec(selectany) extern const DWORD D2COMMON          =  (DWORD)LoadLibraryA("D2Common.dll");
+__declspec(selectany) extern const DWORD D2DDRAW           =  (DWORD)LoadLibraryA("D2DDraw.dll");
+__declspec(selectany) extern const DWORD D2DIRECT3D        =  (DWORD)LoadLibraryA("D2Direct3D.dll");
+__declspec(selectany) extern const DWORD D2GAME            =  (DWORD)LoadLibraryA("D2Game.dll");
+__declspec(selectany) extern const DWORD D2GDI             =  (DWORD)LoadLibraryA("D2Gdi.dll");
+__declspec(selectany) extern const DWORD D2GFX             =  (DWORD)LoadLibraryA("D2Gfx.dll");
+__declspec(selectany) extern const DWORD D2GLIDE           =  (DWORD)LoadLibraryA("D2Glide.dll");
+__declspec(selectany) extern const DWORD D2LANG            =  (DWORD)LoadLibraryA("D2Lang.dll");
+__declspec(selectany) extern const DWORD D2LAUNCH          =  (DWORD)LoadLibraryA("D2Launch.dll");
+__declspec(selectany) extern const DWORD D2MCPCLIENT       =  (DWORD)LoadLibraryA("D2MCPClient.dll");
+__declspec(selectany) extern const DWORD D2MULTI           =  (DWORD)LoadLibraryA("D2Multi.dll");
+__declspec(selectany) extern const DWORD D2NET             =  (DWORD)LoadLibraryA("D2Net.dll");
+__declspec(selectany) extern const DWORD D2SOUND           =  (DWORD)LoadLibraryA("D2Sound.dll");
+__declspec(selectany) extern const DWORD D2WIN             =  (DWORD)LoadLibraryA("D2Win.dll");
+__declspec(selectany) extern const DWORD FOG               =  (DWORD)LoadLibraryA("Fog.dll");
+__declspec(selectany) extern const DWORD STORM             =  (DWORD)LoadLibraryA("Storm.dll");
+__declspec(selectany) extern const DWORD DLLBASE_IJL11     =  (DWORD)LoadLibraryA("ijl11.dll");
+__declspec(selectany) extern const DWORD DLLBASE_BINKW32   =  (DWORD)LoadLibraryA("binkw32.dll");
+__declspec(selectany) extern const DWORD DLLBASE_SMACKW32  =  (DWORD)LoadLibraryA("SmackW32.dll");
+
+#else // GCC placeholder test with extern const __attribute__((weak))  
+
+static const DWORD DLLBASE_BNCLIENT     =   (DWORD)LoadLibraryA("Bnclient.dll");
+static const DWORD DLLBASE_D2CLIENT     =   (DWORD)LoadLibraryA("D2Client.dll");
+static const DWORD DLLBASE_D2CMP        =   (DWORD)LoadLibraryA("D2CMP.dll");
+static const DWORD DLLBASE_D2COMMON     =   (DWORD)LoadLibraryA("D2Common.dll");
+static const DWORD DLLBASE_D2DDRAW      =   (DWORD)LoadLibraryA("D2DDraw.dll");
+static const DWORD DLLBASE_D2DIRECT3D   =   (DWORD)LoadLibraryA("D2Direct3D.dll");
+static const DWORD DLLBASE_D2GAME       =   (DWORD)LoadLibraryA("D2Game.dll");
+static const DWORD DLLBASE_D2GDI        =   (DWORD)LoadLibraryA("D2Gdi.dll");
+static const DWORD DLLBASE_D2GFX        =   (DWORD)LoadLibraryA("D2Gfx.dll");
+static const DWORD DLLBASE_D2GLIDE      =   (DWORD)LoadLibraryA("D2Glide.dll");
+static const DWORD DLLBASE_D2LANG       =   (DWORD)LoadLibraryA("D2Lang.dll");
+static const DWORD DLLBASE_D2LAUNCH     =   (DWORD)LoadLibraryA("D2Launch.dll");
+static const DWORD DLLBASE_D2MCPCLIENT  =   (DWORD)LoadLibraryA("D2MCPClient.dll");
+static const DWORD DLLBASE_D2MULTI      =   (DWORD)LoadLibraryA("D2Multi.dll");
+static const DWORD DLLBASE_D2NET        =   (DWORD)LoadLibraryA("D2Net.dll");
+static const DWORD DLLBASE_D2SOUND      =   (DWORD)LoadLibraryA("D2Sound.dll");
+static const DWORD DLLBASE_D2WIN        =   (DWORD)LoadLibraryA("D2Win.dll");
+static const DWORD DLLBASE_FOG          =   (DWORD)LoadLibraryA("Fog.dll");
+static const DWORD DLLBASE_STORM        =   (DWORD)LoadLibraryA("Storm.dll");
+static const DWORD DLLBASE_IJL11        =   (DWORD)LoadLibraryA("ijl11.dll");
+static const DWORD DLLBASE_BINKW32      =   (DWORD)LoadLibraryA("binkw32.dll");
+static const DWORD DLLBASE_SMACKW32     =   (DWORD)LoadLibraryA("SmackW32.dll");
+
+#endif
 
 #include "D2Constants.h"
 #include "D2Structs.h"
