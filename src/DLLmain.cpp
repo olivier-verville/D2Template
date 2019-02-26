@@ -40,7 +40,7 @@ BOOL __fastcall D2TEMPLATE_ApplyPatch(void* hGame, const DLLPatchStrc* hPatch)
         int nReturn = 0;
         int nDLL = hPatch->nDLL;
         if (nDLL < 0 || nDLL >= D2DLL_INVALID) return FALSE;
-        
+
         DWORD dwAddress = hPatch->dwAddress;
         if (!dwAddress) return FALSE;
 
@@ -48,10 +48,10 @@ BOOL __fastcall D2TEMPLATE_ApplyPatch(void* hGame, const DLLPatchStrc* hPatch)
         if (!dwBaseAddress) return FALSE;
 
         dwAddress += dwBaseAddress;
-        
+
         DWORD dwData = hPatch->dwData;
         if (hPatch->bRelative){ dwData = dwData - (dwAddress + sizeof(dwData)); }
-        
+
         void* hAddress = (void*)dwAddress;
         DWORD dwOldPage;
 
@@ -73,12 +73,12 @@ BOOL __fastcall D2TEMPLATE_ApplyPatch(void* hGame, const DLLPatchStrc* hPatch)
             nReturn = WriteProcessMemory(hGame, hAddress, &dwData, sizeof(dwData), 0);
             VirtualProtect(hAddress, sizeof(dwData), dwOldPage, 0);
         }
-        
+
         if (nReturn == 0) return FALSE;
-        
+
         hPatch++;
     }
-    
+
     return TRUE;
 }
 
@@ -87,7 +87,7 @@ BOOL __fastcall D2TEMPLATE_LoadModules()
     for (int i = 0; i < D2DLL_INVALID; i++)
     {
         DLLBaseStrc* hDllFile = &gptDllFiles[i];
-        
+
         void* hModule = GetModuleHandle(hDllFile->szName);
         if (!hModule)
         {
@@ -138,7 +138,7 @@ int __stdcall DllAttach()
     D2TEMPLATE_GetDebugPrivilege();
 
     void* hGame = GetCurrentProcess();
-    if (!hGame) 
+    if (!hGame)
     {
         D2TEMPLATE_FatalError("Failed to retrieve process");
         return 0;
@@ -167,4 +167,12 @@ int __stdcall DllMain(HINSTANCE hModule, DWORD dwReason, void* lpReserved)
     }
 
     return TRUE;
+}
+
+DWORD GetDllOffset(DWORD Module, int Offset)
+{
+	if(Offset < 0)
+		return (DWORD)GetProcAddress((HMODULE)Module,(LPCSTR)(-Offset));
+    else
+        return Module + Offset;
 }

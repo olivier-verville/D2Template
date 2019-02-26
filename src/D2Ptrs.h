@@ -32,20 +32,22 @@
 *                                                                           *
 *****************************************************************************/
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  These are the macros used by the template core to declare                                                                                                                                                         ///
-//  pointers. Do not touch unless you know what you're doing                                                                                                                                                          ///
-//                                                                                                                                                                                                                    ///
-#ifdef _MSC_VER // eliminate duplicates in msvc - enable /OPT:ICF linker option                                                                                                                                       ///
-#define D2FUNC(DLL, NAME, RETURN, CONV, ARGS, OFFSET) typedef RETURN (CONV##* DLL##_##NAME##_t) ARGS; __declspec(selectany) extern DLL##_##NAME##_t DLL##_##NAME = (DLL##_##NAME##_t)(DLLBASE_##DLL + OFFSET);        ///
-#define D2VAR(DLL, NAME, TYPE, OFFSET) typedef TYPE DLL##_##NAME##_vt; __declspec(selectany) extern DLL##_##NAME##_vt * DLL##_##NAME = (DLL##_##NAME##_vt *)(DLLBASE_##DLL + OFFSET);                                 ///
-#define D2PTR(DLL, NAME, OFFSET) __declspec(selectany) extern DWORD NAME = (DLLBASE_##DLL + OFFSET);                                                                                                                  ///
-#else // GCC placeholder test extern __attribute__((weak)) in place of static                                                                                                                                         ///
-#define D2FUNC(DLL, NAME, RETURN, CONV, ARGS, OFFSET) typedef RETURN (CONV##* DLL##_##NAME##_t) ARGS; static DLL##_##NAME##_t DLL##_##NAME = (DLL##_##NAME##_t)(DLLBASE_##DLL + OFFSET);                              ///
-#define D2VAR(DLL, NAME, TYPE, OFFSET) typedef TYPE DLL##_##NAME##_vt; static DLL##_##NAME##_vt * DLL##_##NAME = (DLL##_##NAME##_vt *)(DLLBASE_##DLL + OFFSET);                                                       ///
-#define D2PTR(DLL, NAME, OFFSET) static DWORD NAME = (DLLBASE_##DLL + OFFSET);                                                                                                                                        ///
-#endif                                                                                                                                                                                                                ///
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  These are the macros used by the template core to declare                                                                                                                                                                ///
+//  pointers. Do not touch unless you know what you're doing                                                                                                                                                                 ///
+//                                                                                                                                                                                                                           ///
+#ifdef _MSC_VER // MS Compiler def's                                                                                                                                                                                         ///
+#define D2FUNC(DLL, NAME, RETURN, CONV, ARGS, OFFSET) typedef RETURN (CONV##* DLL##_##NAME##_t) ARGS; __declspec(selectany) extern DLL##_##NAME##_t DLL##_##NAME = (DLL##_##NAME##_t)GetDllOffset(DLLBASE_##DLL, OFFSET);    ///
+#define D2VAR(DLL, NAME, TYPE, OFFSET) typedef TYPE DLL##_##NAME##_vt; __declspec(selectany) extern DLL##_##NAME##_vt * DLL##_##NAME = (DLL##_##NAME##_vt *)GetDllOffset(DLLBASE_##DLL, OFFSET);                             ///
+#define D2PTR(DLL, NAME, OFFSET) __declspec(selectany) extern DWORD NAME = GetDllOffset(DLLBASE_##DLL, OFFSET);                                                                                                              ///
+#else //GCC Compiler def's                                                                                                                                                                                                   ///
+#define D2FUNC(DLL, NAME, RETURN, CONV, ARGS, OFFSET) typedef RETURN (CONV* DLL##_##NAME##_t) ARGS; DLL##_##NAME##_t DLL##_##NAME __attribute__((weak)) = (DLL##_##NAME##_t)GetDllOffset(DLLBASE_##DLL, OFFSET);             ///
+#define D2VAR(DLL, NAME, TYPE, OFFSET) typedef TYPE DLL##_##NAME##_vt; DLL##_##NAME##_vt * DLL##_##NAME __attribute__((weak)) = (DLL##_##NAME##_vt *)GetDllOffset(DLLBASE_##DLL, OFFSET);                                    ///
+#define D2PTR(DLL, NAME, OFFSET) DWORD NAME __attribute__((weak)) = GetDllOffset(DLLBASE_##DLL, OFFSET);                                                                                                                     ///
+#endif                                                                                                                                                                                                                       ///
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+extern DWORD GetDllOffset(DWORD Module, int Offset);
+
 
 /********************************************************************************
 *                                                                               *
